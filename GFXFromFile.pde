@@ -1,7 +1,7 @@
-/*  GraphicsFromFile 2.0
+/*
+    GraphicsFromFile 2.0
     Written by Adbhut Patil
     DIY Labs 2024
-
 */
 
 final char GFF_SPLITCHAR_CMD_ARG = ' '; // Char seperating commands and arguments
