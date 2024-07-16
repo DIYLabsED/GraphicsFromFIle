@@ -7,16 +7,22 @@
 final char GFF_SPLITCHAR_CMD_ARG = ' '; // Char seperating commands and arguments
 final char GFF_SPLITCHAR_ARGS    = ','; // Char seperating arguments
 
+
 final String GFF_COMMAND_SET_FILL_COL       = "fillcol";
 final String GFF_COMMAND_SET_STROKE_COL     = "strokecol";
 final String GFF_COMMAND_SET_BACKGROUND_COL = "bgcol";
 final String GFF_COMMAND_SET_STROKE_WIDTH   = "strokewidth";
+final String GFF_COMMAND_SET_TEXT_SIZE      = "textsize";
+final String GFF_COMMAND_SET_TEXT_ALIGN     = "textalign";
+final String GFF_COMMAND_SET_TEXT_COORD     = "textcoord";
 final String GFF_COMMAND_DRAW_RECT          = "rect";
 final String GFF_COMMAND_DRAW_ROUND_RECT    = "roundrect";
 final String GFF_COMMAND_DRAW_TRIANGLE      = "tri";
 final String GFF_COMMAND_DRAW_QUAD          = "quad";
 final String GFF_COMMAND_DRAW_ELLIPSE       = "ellipse";
+final String GFF_COMMAND_DRAW_TEXT          = "text";
 
+int textCoordX, textCoordY;
 
 String[] gffLoadFile(String filePath){
   
@@ -54,6 +60,18 @@ void gffHandleFile(String[] gffFile){
       gffHandleSetStrokeWidth(arguments);
       break;
       
+      case GFF_COMMAND_SET_TEXT_SIZE:
+      gffHandleSetTextSize(arguments);
+      break;
+      
+      case GFF_COMMAND_SET_TEXT_ALIGN:
+      gffHandleSetTextAlign(arguments);
+      break;
+      
+      case GFF_COMMAND_SET_TEXT_COORD:
+      gffHandleSetTextCoord(arguments);
+      break;
+      
       case GFF_COMMAND_DRAW_RECT:
       gffHandleDrawRect(arguments);
       break;
@@ -78,8 +96,12 @@ void gffHandleFile(String[] gffFile){
       gffHandleDrawEllipse(arguments);
       break;
       
+      case GFF_COMMAND_DRAW_TEXT:
+      gffHandleDrawText(arguments);
+      break;
+      
       default:
-      println("GFXFromFile Error: Cannot parse command!");
+      println("GFXFromFile Error: Cannot parse command: " + command);
       
     }
     
@@ -202,4 +224,70 @@ void gffHandleDrawEllipse(String args){
   
   ellipse(x, y, w, h);
   
+}
+
+void gffHandleSetTextSize(String args){
+ 
+  textSize(int(args));
+  
+}
+
+void gffHandleDrawText(String args){
+      
+  text(args.replace(".", " "), textCoordX, textCoordY);
+  
+}
+
+void gffHandleSetTextAlign(String args){
+  
+  String[] splitArgs = split(args, GFF_SPLITCHAR_ARGS);
+  
+  String x = splitArgs[0].toLowerCase();
+  String y = splitArgs[1].toLowerCase();
+  
+  int alignX = 0, alignY = 0;
+  
+  switch(x){
+   
+    case "l":
+      alignX = LEFT;
+    break;
+    
+    case "c":
+      alignX = CENTER;
+    break;
+    
+    case "r":
+       alignX = RIGHT;
+   break;
+    
+  }
+  
+  switch(y){
+   
+    case "l":
+      alignY = LEFT;
+    break;
+    
+    case "c":
+      alignY = CENTER;
+    break;
+    
+    case "r":
+       alignY = RIGHT;
+   break;
+    
+  }
+  
+  textAlign(alignX, alignY);
+  
+}
+
+void gffHandleSetTextCoord(String args){
+  
+  String[] splitArgs = split(args, GFF_SPLITCHAR_ARGS);
+  
+  textCoordX = int(splitArgs[0]);
+  textCoordY = int(splitArgs[1]);
+   
 }
